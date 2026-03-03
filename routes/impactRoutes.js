@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { generateImpactReport } = require("../controllers/impactController");
+const { generateImpact } = require("../controllers/impactController");
 
-router.post("/impact", generateImpactReport);
+router.post("/impact", generateImpact);
 
 module.exports = router;

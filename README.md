@@ -20,14 +20,6 @@ This module is designed as a standalone system, separate from Module 1, and can 
 
 🗄️ Database-driven (MySQL)
 
-🧩 How This Module Is Different from Module 1
-Module 1	Module 3
-Product auto-category & tagging	Sustainability impact reporting
-Text-based AI classification	Numerical + narrative impact analysis
-SEO & product metadata	ESG & environmental metrics
-Input: product name & description	Input: product ID
-
-This separation ensures clean architecture and scalability.
 
 🗂️ Project Structure
 AI Impact Reporting Generator/

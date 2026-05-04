@@ -1,149 +1,113 @@
-AI Impact Reporting Generator 
+# AI Impact Reporting Generator
 
-An AI-powered sustainability impact reporting system that calculates and presents real-time environmental impact metrics for products, such as plastic saved, carbon emissions avoided, and sourcing impact.
+A Node.js, Express, and MySQL sustainability reporting app for product impact summaries. Users enter a product ID, generate an impact report, view the completed report on a separate report page, and return home to create another report.
 
-This module is designed as a standalone system, separate from Module 1, and can be integrated into e-commerce, ESG dashboards, or sustainability reporting platforms.
+## Features
 
-🚀 Features
+- Home page for entering a product ID
+- Separate generated report page with a Back to Home button
+- Product report history stored in the browser
+- Demo/sample products from ID `1` to `150`
+- MySQL seed file with sample product and impact data
+- Built-in fallback demo catalog when MySQL is not connected
+- Impact metrics for plastic saved, carbon avoided, sourcing context, confidence score, and recommendations
+- Responsive vanilla HTML, CSS, and JavaScript UI
 
-📊 Real-time sustainability impact calculation
+## Tech Stack
 
-♻️ Plastic waste reduction estimation
+- Node.js
+- Express.js
+- MySQL with `mysql2`
+- Vanilla HTML, CSS, and JavaScript
+- `dotenv` for environment variables
 
-🌍 Carbon emission avoidance metrics
+## Project Structure
 
-📍 Local vs standard sourcing insights
+```text
+config/                 Database connection
+controllers/            API controller logic and demo fallback data
+public/                 Frontend UI
+routes/                 Express routes
+services/               Impact calculation service
+database.sql            MySQL schema and demo seed data
+server.js               Express app entry point
+```
 
-🧠 AI-style logic layer (service-based architecture)
+## Setup
 
-🎨 Clean, user-friendly web dashboard
+Install dependencies:
 
-🗄️ Database-driven (MySQL)
-
-
-🗂️ Project Structure
-AI Impact Reporting Generator/
-│
-├── config/
-│   └── db.js
-│
-├── controllers/
-│   └── impactController.js
-│
-├── routes/
-│   └── impactRoutes.js
-│
-├── services/
-│   └── impactService.js
-│
-├── public/
-│   └── index.html
-│
-├── database.sql
-├── server.js
-├── package.json
-├── .env.example
-└── README.md
-⚙️ Tech Stack
-
-Backend: Node.js, Express.js
-
-Database: MySQL
-
-Frontend: HTML, CSS, Vanilla JavaScript
-
-Architecture: MVC + Service Layer
-
-Environment Config: dotenv
-
-🛠️ Setup Instructions
-1️⃣ Clone the Repository
-git clone https://github.com/JatinDuttt/AI-impact-reporting-generator.git
-cd AI-impact-reporting-generator
-2️⃣ Install Dependencies
+```bash
 npm install
-3️⃣ Database Setup
+```
 
-Open database.sql
+Create a `.env` file from `.env.example`:
 
-Create the database and tables in MySQL
-
-Insert sample impact data (provided in the SQL file)
-
-4️⃣ Configure Environment Variables
-
-Create a .env file:
-
+```env
 DB_HOST=localhost
 DB_USER=root
-DB_PASSWORD=your_password
+DB_PASSWORD=
 DB_NAME=ai_impact
 PORT=4000
-5️⃣ Start the Server
+```
+
+Import `database.sql` into MySQL. It creates the database, tables, and sample data for product IDs `1` to `150`.
+
+Start the server:
+
+```bash
 npm start
+```
 
-Server will run at:
+Open the app:
 
+```text
 http://localhost:4000
-🌐 Web Dashboard
+```
 
-Open in browser:
+## Demo Products
 
-http://localhost:4000
-How it works:
+Use any product ID from `1` to `150`.
 
-Enter a Product ID
+Examples:
 
-Click Generate Impact
+```text
+1, 2, 3, 16, 80, 150
+```
 
-View sustainability impact summary:
+If MySQL is not connected, these demo IDs still work through the fallback catalog in `controllers/impactController.js`.
 
-Plastic saved
+## API
 
-Carbon avoided
+Health check:
 
-Sourcing type
+```http
+GET /api/health
+```
 
-Human-readable impact statement
+Product details:
 
-🧠 Example Impact Output
+```http
+GET /api/products/:product_id
+```
 
-“By choosing this product, approximately 500g of plastic waste and 375g of carbon emissions were avoided.”
+Generate impact report:
 
-This makes sustainability easy to understand for non-technical users.
+```http
+POST /api/impact
+Content-Type: application/json
 
-🎯 Use Cases
+{
+  "product_id": 16
+}
+```
 
-E-commerce sustainability dashboards
+## Notes
 
-ESG & compliance reporting tools
+- `node_modules/` is intentionally ignored and should be recreated with `npm install`.
+- `.env` is ignored so local database credentials are not committed.
+- `.env.example` is included as a safe template.
 
-Green product labeling
-
-Corporate sustainability analytics
-
-Investor & stakeholder reporting
-
-🔮 Future Enhancements
-
-Confidence score for impact accuracy
-
-Animated UI transitions
-
-Historical impact tracking
-
-ML-based impact prediction models
-
-Exportable sustainability reports (PDF)
-
-👨‍💻 Author
+## Author
 
 Jatin
-
-
-AI & Backend Developer
-Focused on building practical, production-ready AI systems.
-
-📝 License
-
-This project is for educational and demonstration purposes.

@@ -1,11 +1,12 @@
 const express = require("express");
 const path = require("path");
+require("dotenv").config();
 
 const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 const impactRoutes = require("./routes/impactRoutes");
@@ -15,7 +16,7 @@ app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
     timestamp: new Date().toISOString(),
-    message: "Hi I'm Aman"
+    message: "AI Impact Reporting Generator is running"
   });
 });
 
@@ -25,5 +26,5 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`AI Impact Reporting Generator running skjdfbhcnkvjbivu b9p8yh3 on http://localhost:${PORT}`);
+  console.log(`AI Impact Reporting Generator running on http://localhost:${PORT}`);
 });

@@ -1,5 +1,5 @@
 function generateImpact(product) {
-  const text = `${product.product_name} ${product.description}`.toLowerCase();
+  const text = `${product.product_name || ""} ${product.description || ""}`.toLowerCase();
 
   let plasticSaved = 0;
   let carbonAvoided = 0;
@@ -33,7 +33,7 @@ function generateImpact(product) {
     confidence += 20;
   }
 
-  if (confidence > 100) confidence = 100;
+  confidence = Math.min(confidence, 100);
 
   let confidenceLabel = "Low";
   if (confidence >= 80) confidenceLabel = "High";

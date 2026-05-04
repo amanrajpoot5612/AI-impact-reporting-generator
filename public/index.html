@@ -3,22 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Generate product sustainability impact reports with plastic savings, carbon avoidance, sourcing context, confidence scoring, and report history." />
+  <meta name="theme-color" content="#171916" />
   <title>AI Impact Reporting Dashboard</title>
   <style>
     :root {
-      --bg: #f3efe4;
-      --bg-glow: rgba(15, 76, 58, 0.14);
-      --panel: rgba(255, 250, 240, 0.86);
-      --panel-strong: #fffdf7;
-      --surface: #f7f2e8;
-      --text: #173127;
-      --muted: #5c6d63;
-      --line: rgba(23, 49, 39, 0.12);
-      --primary: #0f6a4a;
-      --primary-strong: #0b5139;
-      --accent: #cb8f2d;
-      --danger: #b2452f;
-      --shadow: 0 20px 60px rgba(27, 48, 39, 0.14);
+      --bg: #f7fbff;
+      --panel: rgba(255, 255, 255, 0.9);
+      --panel-strong: #ffffff;
+      --surface: #eef6f9;
+      --text: #151517;
+      --muted: #65707a;
+      --line: rgba(21, 21, 23, 0.12);
+      --primary: #ff4f64;
+      --primary-strong: #d91f3d;
+      --accent: #00a6a6;
+      --signal: #5eead4;
+      --violet: #6d5dfc;
+      --danger: #c24130;
+      --shadow: 0 24px 70px rgba(21, 21, 23, 0.12);
       --radius-xl: 28px;
       --radius-lg: 20px;
       --radius-md: 14px;
@@ -32,12 +35,20 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, var(--bg-glow), transparent 28%),
-        radial-gradient(circle at 85% 10%, rgba(203, 143, 45, 0.18), transparent 22%),
-        linear-gradient(135deg, #efe8d8 0%, #f8f4eb 48%, #ece4d2 100%);
+        linear-gradient(115deg, rgba(255, 79, 100, 0.12), transparent 32%),
+        linear-gradient(245deg, rgba(0, 166, 166, 0.14), transparent 34%),
+        linear-gradient(180deg, #f8fbff 0%, #f5fff1 52%, #fff7fa 100%);
+      transition: background 0.45s ease;
+    }
+
+    body.report-ready {
+      background:
+        linear-gradient(115deg, rgba(255, 79, 100, 0.18), transparent 28%),
+        linear-gradient(245deg, rgba(0, 166, 166, 0.2), transparent 32%),
+        linear-gradient(180deg, #fffafd 0%, #f4fffb 48%, #f7f8ff 100%);
     }
 
     .page-shell {
@@ -60,7 +71,7 @@
     .insight-card {
       backdrop-filter: blur(14px);
       background: var(--panel);
-      border: 1px solid rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(21, 21, 23, 0.08);
       box-shadow: var(--shadow);
     }
 
@@ -78,7 +89,8 @@
       width: 240px;
       height: 240px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(15, 106, 74, 0.16), transparent 70%);
+      background: linear-gradient(135deg, rgba(255, 79, 100, 0.18), rgba(0, 166, 166, 0.18));
+      filter: blur(4px);
       pointer-events: none;
     }
 
@@ -88,7 +100,7 @@
       gap: 10px;
       padding: 8px 14px;
       border-radius: 999px;
-      background: rgba(15, 106, 74, 0.08);
+      background: rgba(94, 234, 212, 0.22);
       color: var(--primary-strong);
       font-size: 0.9rem;
       letter-spacing: 0.04em;
@@ -99,7 +111,7 @@
       margin: 18px 0 14px;
       font-size: clamp(2.2rem, 4vw, 4rem);
       line-height: 0.98;
-      letter-spacing: -0.04em;
+      letter-spacing: 0;
       max-width: 10ch;
     }
 
@@ -121,8 +133,8 @@
     .mini-stat {
       padding: 16px;
       border-radius: 18px;
-      background: rgba(255, 253, 247, 0.86);
-      border: 1px solid rgba(23, 49, 39, 0.08);
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(21, 21, 23, 0.08);
     }
 
     .mini-stat strong {
@@ -146,7 +158,7 @@
     .history-card h2 {
       margin: 0 0 10px;
       font-size: 1.35rem;
-      letter-spacing: -0.03em;
+      letter-spacing: 0;
     }
 
     .panel-copy,
@@ -174,7 +186,7 @@
       width: 100%;
       padding: 15px 16px;
       border-radius: var(--radius-sm);
-      border: 1px solid rgba(23, 49, 39, 0.16);
+      border: 1px solid rgba(21, 21, 23, 0.16);
       background: rgba(255, 255, 255, 0.85);
       color: var(--text);
       font: inherit;
@@ -183,8 +195,8 @@
 
     input:focus {
       outline: none;
-      border-color: rgba(15, 106, 74, 0.45);
-      box-shadow: 0 0 0 4px rgba(15, 106, 74, 0.12);
+      border-color: rgba(255, 79, 100, 0.58);
+      box-shadow: 0 0 0 4px rgba(255, 79, 100, 0.13);
       transform: translateY(-1px);
     }
 
@@ -195,9 +207,9 @@
     }
 
     .chip {
-      border: 1px solid rgba(15, 106, 74, 0.18);
-      background: rgba(15, 106, 74, 0.07);
-      color: var(--primary-strong);
+      border: 1px solid rgba(0, 166, 166, 0.28);
+      background: rgba(0, 166, 166, 0.08);
+      color: #056f72;
       border-radius: 999px;
       padding: 9px 14px;
       font: inherit;
@@ -207,7 +219,7 @@
 
     .chip:hover {
       transform: translateY(-1px);
-      background: rgba(15, 106, 74, 0.12);
+      background: rgba(94, 234, 212, 0.28);
     }
 
     .actions {
@@ -220,13 +232,13 @@
       padding: 15px 18px;
       border: none;
       border-radius: 999px;
-      background: linear-gradient(135deg, var(--primary) 0%, #127d58 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--violet) 100%);
       color: #fff;
       font: inherit;
       font-weight: 700;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-      box-shadow: 0 18px 28px rgba(15, 106, 74, 0.22);
+      box-shadow: 0 18px 32px rgba(255, 79, 100, 0.24);
     }
 
     button.primary-btn:hover:not(:disabled) {
@@ -260,6 +272,66 @@
       margin-top: 24px;
     }
 
+    .view {
+      display: grid;
+      gap: 24px;
+    }
+
+    .view[hidden] {
+      display: none;
+    }
+
+    .home-history {
+      margin-top: 24px;
+    }
+
+    .report-view {
+      animation: reportReveal 0.45s ease both;
+    }
+
+    .report-topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 18px 20px;
+      border-radius: var(--radius-xl);
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(21, 21, 23, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .report-topbar h2 {
+      margin: 0 0 4px;
+      font-size: 1.25rem;
+      letter-spacing: 0;
+    }
+
+    .report-topbar p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .secondary-btn {
+      border: 1px solid rgba(21, 21, 23, 0.12);
+      border-radius: 999px;
+      padding: 11px 16px;
+      background: #ffffff;
+      color: var(--text);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .secondary-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 79, 100, 0.34);
+      box-shadow: 0 12px 28px rgba(255, 79, 100, 0.14);
+    }
+
     .results-area {
       display: grid;
       gap: 20px;
@@ -269,6 +341,16 @@
     .history-card {
       padding: 24px;
       border-radius: var(--radius-xl);
+    }
+
+    .results-header {
+      transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+    }
+
+    body.report-ready .results-header {
+      border-color: rgba(255, 79, 100, 0.32);
+      box-shadow: 0 26px 76px rgba(255, 79, 100, 0.18);
+      transform: translateY(-2px);
     }
 
     .meta-strip {
@@ -281,9 +363,15 @@
     .meta-pill {
       padding: 8px 12px;
       border-radius: 999px;
-      background: rgba(23, 49, 39, 0.06);
+      background: rgba(21, 21, 23, 0.06);
       color: var(--muted);
       font-size: 0.9rem;
+    }
+
+    body.report-ready .meta-pill:first-child {
+      background: rgba(94, 234, 212, 0.42);
+      color: #0f5b54;
+      font-weight: 800;
     }
 
     .metrics-grid {
@@ -308,7 +396,7 @@
 
     .metric-value {
       font-size: clamp(2rem, 3.2vw, 3rem);
-      letter-spacing: -0.05em;
+      letter-spacing: 0;
       margin: 0;
     }
 
@@ -336,14 +424,14 @@
       border-radius: 999px;
       padding: 8px 12px;
       font-size: 0.88rem;
-      background: rgba(203, 143, 45, 0.12);
-      color: #7d5615;
+      background: rgba(109, 93, 252, 0.12);
+      color: #4d43c3;
     }
 
     .confidence-track {
       height: 12px;
       border-radius: 999px;
-      background: rgba(23, 49, 39, 0.08);
+      background: rgba(21, 21, 23, 0.08);
       overflow: hidden;
     }
 
@@ -351,7 +439,7 @@
       width: 0;
       height: 100%;
       border-radius: inherit;
-      background: linear-gradient(90deg, #d07a2c 0%, #0f6a4a 100%);
+      background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 60%, var(--signal) 100%);
       transition: width 0.8s ease;
     }
 
@@ -364,13 +452,51 @@
     .report-layout {
       display: grid;
       gap: 18px;
+      animation: reportReveal 0.55s ease both;
+    }
+
+    .report-status-banner {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      padding: 18px 20px;
+      border-radius: var(--radius-lg);
+      color: #151517;
+      background: linear-gradient(135deg, var(--signal), #bae6fd 55%, #ddd6fe);
+      border: 1px solid rgba(21, 21, 23, 0.1);
+      box-shadow: 0 22px 54px rgba(0, 166, 166, 0.18);
+    }
+
+    .report-status-banner strong {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .report-status-banner span {
+      display: block;
+      color: rgba(21, 21, 23, 0.72);
+      line-height: 1.5;
+    }
+
+    .report-stamp {
+      white-space: nowrap;
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.66);
+      font-weight: 800;
+      color: #202225;
     }
 
     .report-hero {
       padding: 24px;
       border-radius: var(--radius-xl);
-      background: linear-gradient(135deg, rgba(15, 106, 74, 0.08), rgba(203, 143, 45, 0.1));
-      border: 1px solid rgba(23, 49, 39, 0.08);
+      background:
+        linear-gradient(135deg, rgba(255, 79, 100, 0.1), rgba(0, 166, 166, 0.12)),
+        #ffffff;
+      border: 1px solid rgba(255, 79, 100, 0.18);
+      border-left: 8px solid var(--primary);
       box-shadow: var(--shadow);
     }
 
@@ -380,8 +506,8 @@
       gap: 8px;
       padding: 8px 12px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.7);
-      color: var(--primary-strong);
+      background: rgba(94, 234, 212, 0.28);
+      color: #0f5b54;
       font-size: 0.85rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -390,7 +516,7 @@
     .report-title {
       margin: 16px 0 8px;
       font-size: clamp(1.8rem, 3vw, 2.6rem);
-      letter-spacing: -0.04em;
+      letter-spacing: 0;
     }
 
     .report-summary {
@@ -411,8 +537,18 @@
       padding: 18px;
       border-radius: var(--radius-lg);
       background: var(--panel);
-      border: 1px solid rgba(23, 49, 39, 0.08);
+      border: 1px solid rgba(21, 21, 23, 0.08);
       box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .highlight-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--signal));
     }
 
     .highlight-label {
@@ -427,7 +563,7 @@
     .highlight-value {
       margin: 0;
       font-size: 1.8rem;
-      letter-spacing: -0.04em;
+      letter-spacing: 0;
     }
 
     .highlight-note {
@@ -447,14 +583,14 @@
       padding: 22px;
       border-radius: var(--radius-xl);
       background: var(--panel);
-      border: 1px solid rgba(23, 49, 39, 0.08);
+      border: 1px solid rgba(21, 21, 23, 0.08);
       box-shadow: var(--shadow);
     }
 
     .section-heading {
       margin: 0 0 14px;
       font-size: 1.2rem;
-      letter-spacing: -0.03em;
+      letter-spacing: 0;
     }
 
     .insight-list {
@@ -465,8 +601,8 @@
     .insight-row {
       padding: 14px 16px;
       border-radius: 16px;
-      background: rgba(255, 255, 255, 0.62);
-      border: 1px solid rgba(23, 49, 39, 0.08);
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(21, 21, 23, 0.08);
     }
 
     .insight-row strong {
@@ -491,8 +627,8 @@
       gap: 16px;
       padding: 12px 14px;
       border-radius: 14px;
-      background: rgba(255, 255, 255, 0.6);
-      border: 1px solid rgba(23, 49, 39, 0.07);
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(21, 21, 23, 0.07);
     }
 
     .table-row span:first-child {
@@ -508,7 +644,7 @@
     .recommendation-item {
       padding: 12px 14px;
       border-left: 4px solid var(--accent);
-      background: rgba(203, 143, 45, 0.08);
+      background: rgba(0, 166, 166, 0.08);
       border-radius: 0 14px 14px 0;
       line-height: 1.6;
     }
@@ -522,9 +658,9 @@
     .placeholder {
       text-align: center;
       padding: 36px 22px;
-      border: 1px dashed rgba(23, 49, 39, 0.18);
+      border: 1px dashed rgba(0, 166, 166, 0.32);
       border-radius: var(--radius-lg);
-      background: rgba(255, 255, 255, 0.45);
+      background: rgba(255, 255, 255, 0.62);
       color: var(--muted);
     }
 
@@ -535,7 +671,7 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background: rgba(16, 30, 24, 0.42);
+      background: rgba(21, 21, 23, 0.42);
       backdrop-filter: blur(10px);
       z-index: 30;
     }
@@ -548,7 +684,7 @@
       width: min(640px, 100%);
       padding: 28px;
       border-radius: 30px;
-      background: linear-gradient(180deg, rgba(255, 251, 244, 0.98), rgba(249, 242, 229, 0.98));
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 249, 255, 0.98));
       border: 1px solid rgba(255, 255, 255, 0.7);
       box-shadow: 0 28px 80px rgba(20, 38, 31, 0.24);
     }
@@ -566,7 +702,7 @@
       gap: 8px;
       padding: 8px 12px;
       border-radius: 999px;
-      background: rgba(15, 106, 74, 0.1);
+      background: rgba(255, 79, 100, 0.1);
       color: var(--primary-strong);
       font-size: 0.9rem;
     }
@@ -588,7 +724,7 @@
       padding: 14px 16px;
       border-radius: 18px;
       background: rgba(255, 255, 255, 0.72);
-      border: 1px solid rgba(23, 49, 39, 0.08);
+      border: 1px solid rgba(21, 21, 23, 0.08);
     }
 
     .loading-detail span {
@@ -615,9 +751,9 @@
     .loading-step {
       padding: 12px 14px;
       border-radius: 14px;
-      background: rgba(15, 106, 74, 0.06);
+      background: rgba(0, 166, 166, 0.08);
       color: var(--text);
-      border: 1px solid rgba(15, 106, 74, 0.08);
+      border: 1px solid rgba(0, 166, 166, 0.12);
       line-height: 1.55;
     }
 
@@ -626,7 +762,7 @@
       height: 10px;
       border-radius: 999px;
       overflow: hidden;
-      background: rgba(23, 49, 39, 0.08);
+      background: rgba(21, 21, 23, 0.08);
       margin-top: 14px;
     }
 
@@ -635,7 +771,7 @@
       width: 40%;
       height: 100%;
       border-radius: inherit;
-      background: linear-gradient(90deg, rgba(15, 106, 74, 0.2), rgba(15, 106, 74, 0.9), rgba(15, 106, 74, 0.2));
+      background: linear-gradient(90deg, rgba(255, 79, 100, 0.2), rgba(0, 166, 166, 0.92), rgba(94, 234, 212, 0.48));
       animation: shimmer 1.3s infinite ease-in-out;
     }
 
@@ -645,7 +781,7 @@
     }
 
     .history-item {
-      border: 1px solid rgba(23, 49, 39, 0.08);
+      border: 1px solid rgba(21, 21, 23, 0.08);
       border-radius: 16px;
       padding: 14px;
       background: rgba(255, 255, 255, 0.62);
@@ -655,7 +791,31 @@
 
     .history-item:hover {
       transform: translateY(-1px);
-      border-color: rgba(15, 106, 74, 0.28);
+      border-color: rgba(255, 79, 100, 0.34);
+    }
+
+    @keyframes reportReveal {
+      0% {
+        opacity: 0;
+        transform: translateY(14px) scale(0.985);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes readyPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 79, 100, 0.26);
+      }
+      100% {
+        box-shadow: 0 0 0 18px rgba(255, 79, 100, 0);
+      }
+    }
+
+    body.report-ready .report-status-banner {
+      animation: readyPulse 1.1s ease-out 1;
     }
 
     .history-item strong {
@@ -685,17 +845,579 @@
       }
     }
 
+    /* Full UI redesign: structured reporting cockpit */
+    :root {
+      --bg: #f4f6f0;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-strong: #ffffff;
+      --surface: #e8eee6;
+      --text: #171916;
+      --muted: #687164;
+      --line: rgba(23, 25, 22, 0.12);
+      --primary: #e94b35;
+      --primary-strong: #ba2e1f;
+      --accent: #0aa6a6;
+      --signal: #5eead4;
+      --violet: #6750f0;
+      --danger: #b42318;
+      --shadow: 0 18px 46px rgba(23, 25, 22, 0.1);
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      background:
+        linear-gradient(rgba(23, 25, 22, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 25, 22, 0.035) 1px, transparent 1px),
+        linear-gradient(135deg, #f7f8ef 0%, #edf7f4 46%, #fff5f1 100%);
+      background-size: 28px 28px, 28px 28px, 100% 100%;
+    }
+
+    body.report-ready {
+      background:
+        linear-gradient(rgba(23, 25, 22, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 25, 22, 0.035) 1px, transparent 1px),
+        linear-gradient(135deg, #fff7f4 0%, #effbf8 48%, #f4f1ff 100%);
+      background-size: 28px 28px, 28px 28px, 100% 100%;
+    }
+
+    .page-shell {
+      width: min(1240px, calc(100% - 28px));
+      padding: 18px 0 44px;
+    }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 68px;
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: inline-grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: #171916;
+      color: var(--signal);
+      font-weight: 900;
+      box-shadow: inset 0 -4px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .brand-lockup strong,
+    .brand-lockup span,
+    .system-state span {
+      display: block;
+    }
+
+    .brand-lockup strong {
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .brand-lockup span {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.35;
+    }
+
+    .system-state {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: #171916;
+      color: #ffffff;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--signal);
+      box-shadow: 0 0 0 5px rgba(94, 234, 212, 0.18);
+    }
+
+    .hero {
+      grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.7fr);
+      gap: 18px;
+    }
+
+    .hero-card,
+    .panel,
+    .history-card,
+    .results-header,
+    .report-section,
+    .highlight-card,
+    .report-topbar {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(250px, 0.72fr);
+      gap: 22px;
+      min-height: 430px;
+      padding: 28px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.82)),
+        linear-gradient(135deg, rgba(233, 75, 53, 0.1), rgba(10, 166, 166, 0.12));
+    }
+
+    .hero-card::after {
+      display: none;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      border: 1px solid rgba(23, 25, 22, 0.1);
+      background: var(--signal);
+      color: #171916;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      font-size: clamp(2.6rem, 6vw, 5.2rem);
+      line-height: 0.92;
+      margin: 22px 0 18px;
+    }
+
+    .hero-copy {
+      max-width: 54ch;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    .hero-visual {
+      align-self: stretch;
+      display: grid;
+      align-content: end;
+      gap: 12px;
+      min-height: 320px;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(180deg, rgba(23, 25, 22, 0.08), rgba(23, 25, 22, 0.01)),
+        #171916;
+      color: #ffffff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-visual::before {
+      content: "IMPACT";
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      color: rgba(94, 234, 212, 0.92);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+    }
+
+    .scan-line {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent, rgba(94, 234, 212, 0.18), transparent);
+      animation: scanMove 2.4s ease-in-out infinite;
+    }
+
+    .visual-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+      padding: 13px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .visual-row span {
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    .visual-row strong {
+      color: var(--signal);
+    }
+
+    .stats-strip {
+      grid-column: 1 / -1;
+      gap: 10px;
+      margin-top: 0;
+    }
+
+    .mini-stat {
+      min-height: 108px;
+      background: #f6f8f1;
+      border: 1px solid var(--line);
+    }
+
+    .mini-stat strong {
+      color: var(--primary);
+      font-size: 1.65rem;
+    }
+
+    .panel {
+      padding: 24px;
+      border-top: 5px solid var(--accent);
+    }
+
+    .panel h2,
+    .history-card h2,
+    .results-header h2 {
+      font-size: 1.45rem;
+    }
+
+    input {
+      min-height: 54px;
+      border: 1px solid var(--line);
+      background: #f9faf5;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(233, 75, 53, 0.13);
+    }
+
+    .chip {
+      border-color: rgba(23, 25, 22, 0.12);
+      background: #ffffff;
+      color: #171916;
+      font-weight: 800;
+    }
+
+    .chip:hover {
+      background: var(--signal);
+      border-color: transparent;
+    }
+
+    button.primary-btn {
+      min-height: 56px;
+      border-radius: var(--radius-sm);
+      background: #171916;
+      color: #ffffff;
+      box-shadow: 0 16px 32px rgba(23, 25, 22, 0.18);
+    }
+
+    button.primary-btn:hover:not(:disabled) {
+      background: var(--primary);
+    }
+
+    .home-history,
+    .history-card {
+      margin-top: 0;
+    }
+
+    .history-card {
+      border-left: 5px solid var(--violet);
+    }
+
+    .history-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .content-grid .history-list {
+      grid-template-columns: 1fr;
+    }
+
+    .history-item {
+      text-align: left;
+      border-radius: var(--radius-md);
+      background: #f9faf5;
+    }
+
+    .report-topbar {
+      background: #171916;
+      color: #ffffff;
+    }
+
+    .report-topbar p {
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    .secondary-btn {
+      border: 0;
+      background: var(--signal);
+      color: #171916;
+    }
+
+    .results-header {
+      border-top: 5px solid var(--primary);
+    }
+
+    body.report-ready .results-header {
+      border-color: var(--primary);
+      box-shadow: var(--shadow);
+      transform: none;
+    }
+
+    .meta-pill {
+      border: 1px solid var(--line);
+      background: #f9faf5;
+      color: #454b42;
+      font-weight: 700;
+    }
+
+    body.report-ready .meta-pill:first-child {
+      background: #171916;
+      color: var(--signal);
+    }
+
+    .report-status-banner {
+      border-radius: var(--radius-lg);
+      background: var(--signal);
+      box-shadow: var(--shadow);
+    }
+
+    .report-hero {
+      border: 1px solid var(--line);
+      border-left: 0;
+      border-top: 5px solid var(--accent);
+      background: #ffffff;
+    }
+
+    .report-kicker {
+      background: #171916;
+      color: var(--signal);
+    }
+
+    .highlight-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+    }
+
+    .highlight-card::before {
+      height: 6px;
+      background: var(--primary);
+    }
+
+    .highlight-card:nth-child(2)::before {
+      background: var(--accent);
+    }
+
+    .highlight-card:nth-child(3)::before {
+      background: var(--violet);
+    }
+
+    .highlight-value {
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      font-weight: 900;
+    }
+
+    .section-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.72fr);
+    }
+
+    .report-section {
+      background: #ffffff;
+    }
+
+    .insight-row,
+    .table-row {
+      background: #f9faf5;
+      border-color: rgba(23, 25, 22, 0.08);
+    }
+
+    .recommendation-item {
+      border-left-color: var(--primary);
+      background: #fff4f1;
+    }
+
+    .loading-card {
+      border-radius: var(--radius-xl);
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .loading-pill {
+      background: #171916;
+      color: var(--signal);
+    }
+
+    @keyframes scanMove {
+      0% {
+        transform: translateY(-100%);
+      }
+      50% {
+        transform: translateY(100%);
+      }
+      100% {
+        transform: translateY(-100%);
+      }
+    }
+
+    /* Lighthouse pass: lighter paint work, stronger contrast, clearer controls */
+    :root {
+      --muted: #485044;
+      --line: rgba(23, 25, 22, 0.16);
+      --shadow: 0 8px 22px rgba(23, 25, 22, 0.08);
+    }
+
+    body,
+    body.report-ready {
+      background: linear-gradient(135deg, #f8faf4 0%, #edf7f4 52%, #fff7f4 100%);
+      background-size: 100% 100%;
+    }
+
+    .hero-card,
+    .panel,
+    .metric-card,
+    .history-card,
+    .insight-card,
+    .app-header,
+    .loading-modal {
+      backdrop-filter: none;
+    }
+
+    .report-view,
+    .report-layout,
+    .scan-line,
+    .loading-bar span,
+    body.report-ready .report-status-banner {
+      animation: none;
+    }
+
+    .scan-line {
+      display: none;
+    }
+
+    .hero-card,
+    .panel,
+    .history-card,
+    .results-header,
+    .report-section,
+    .highlight-card,
+    .report-topbar,
+    .app-header {
+      box-shadow: var(--shadow);
+    }
+
+    .hero-visual {
+      min-height: 260px;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+      font-size: 0.94rem;
+    }
+
+    .history-item,
+    .chip,
+    .primary-btn,
+    .secondary-btn {
+      font: inherit;
+    }
+
+    .history-item {
+      width: 100%;
+    }
+
+    .history-item span,
+    .panel-copy,
+    .results-subtitle,
+    .history-copy,
+    .hero-copy,
+    .highlight-note,
+    .report-summary,
+    .insight-row span,
+    .brand-lockup span {
+      color: var(--muted);
+    }
+
+    .report-topbar p {
+      color: rgba(255, 255, 255, 0.84);
+    }
+
+    .visual-row span {
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid var(--violet);
+      outline-offset: 3px;
+    }
+
+    .secondary-btn:hover,
+    button.primary-btn:hover:not(:disabled),
+    .chip:hover,
+    .history-item:hover {
+      transform: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
     @media (max-width: 960px) {
       .hero,
       .content-grid {
         grid-template-columns: 1fr;
       }
 
+      .hero-card {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-visual {
+        min-height: 240px;
+      }
+
       .stats-strip,
       .metrics-grid,
       .highlights-grid,
-      .section-grid {
+      .section-grid,
+      .report-status-banner,
+      .report-topbar {
         grid-template-columns: 1fr;
+      }
+
+      .report-topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .report-stamp {
+        width: fit-content;
       }
     }
 
@@ -703,6 +1425,16 @@
       .page-shell {
         width: min(100% - 20px, 1180px);
         padding-top: 20px;
+      }
+
+      .app-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .system-state {
+        width: 100%;
+        justify-content: center;
       }
 
       .loading-card {
@@ -727,110 +1459,268 @@
         font-size: 2.4rem;
       }
     }
+
+    /* Repair pass: balanced hero after the audit-focused changes */
+    .hero {
+      grid-template-columns: minmax(0, 1fr) minmax(360px, 0.64fr);
+      align-items: stretch;
+      gap: 24px;
+    }
+
+    .hero-card {
+      display: block;
+      min-height: auto;
+      padding: clamp(24px, 3vw, 38px);
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.9)),
+        linear-gradient(135deg, rgba(233, 75, 53, 0.08), rgba(10, 166, 166, 0.1));
+    }
+
+    .hero-card .eyebrow {
+      margin-bottom: 22px;
+    }
+
+    .hero-card h1 {
+      max-width: 680px;
+      margin: 0 0 18px;
+      font-size: clamp(2.35rem, 5vw, 4.7rem);
+      line-height: 1;
+      text-wrap: balance;
+    }
+
+    .hero-card .hero-copy {
+      max-width: 680px;
+      margin-bottom: 24px;
+      font-size: 1.04rem;
+    }
+
+    .hero-visual {
+      min-height: auto;
+      margin: 24px 0;
+      padding: 16px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-content: stretch;
+      background: #171916;
+    }
+
+    .hero-visual::before {
+      display: none;
+    }
+
+    .visual-row {
+      display: grid;
+      gap: 8px;
+      min-height: 86px;
+      align-content: center;
+      text-align: left;
+    }
+
+    .visual-row strong {
+      font-size: 1.45rem;
+    }
+
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 0;
+    }
+
+    .mini-stat {
+      min-height: 96px;
+      padding: 16px;
+    }
+
+    .panel {
+      align-self: stretch;
+      padding: clamp(24px, 3vw, 36px);
+    }
+
+    .panel h2 {
+      font-size: 1.8rem;
+    }
+
+    .app-header {
+      background: rgba(255, 255, 255, 0.94);
+    }
+
+    body.report-ready .app-header {
+      display: none;
+    }
+
+    @media (max-width: 960px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card h1 {
+        font-size: clamp(2.2rem, 8vw, 3.6rem);
+      }
+    }
+
+    @media (max-width: 680px) {
+      .hero-visual,
+      .stats-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .visual-row {
+        min-height: 72px;
+      }
+    }
   </style>
 </head>
 <body>
   <main class="page-shell">
-    <section class="hero">
-      <article class="hero-card">
-        <div class="eyebrow">AI Impact Intelligence</div>
-        <h1>Turn product data into a live sustainability story.</h1>
-        <p class="hero-copy">
-          Generate a clearer impact snapshot for each product with dynamic carbon, plastic, and sourcing signals that are easier to read, share, and trust.
-        </p>
-        <div class="stats-strip">
-          <div class="mini-stat">
-            <strong>Live</strong>
-            <span>Instant report rendering from API responses</span>
+    <header class="app-header">
+      <div class="brand-lockup">
+        <span class="brand-mark">AI</span>
+        <div>
+          <strong>ImpactLab</strong>
+          <span>Product sustainability reports</span>
+        </div>
+      </div>
+      <div class="system-state">
+        <span class="status-dot"></span>
+        <span>Report engine online</span>
+      </div>
+    </header>
+
+    <div id="loadingModal" class="loading-modal" aria-hidden="true">
+      <div id="loadingCard" class="loading-card" role="dialog" aria-modal="true" aria-labelledby="loadingHeading">
+        <h2 id="loadingHeading">Analyzing sustainability impact</h2>
+        <p class="results-subtitle">We are pulling the report, calculating confidence, and preparing the report page.</p>
+        <div class="loading-context">
+          <div id="loadingProductPill" class="loading-pill">Waiting for product input</div>
+          <p id="loadingMessage" class="loading-copy">The selected product details will appear here while the search is in progress.</p>
+        </div>
+        <div class="loading-details">
+          <div class="loading-detail">
+            <span>Product ID</span>
+            <strong id="loadingProductIdValue">Not selected</strong>
           </div>
-          <div class="mini-stat">
-            <strong>Visual</strong>
-            <span>Readable cards, confidence meter, and quick insights</span>
-          </div>
-          <div class="mini-stat">
-            <strong>Reusable</strong>
-            <span>Recent product lookups stay available in this browser</span>
+          <div class="loading-detail">
+            <span>Product Name</span>
+            <strong id="loadingProductNameValue">Waiting for report lookup</strong>
           </div>
         </div>
-      </article>
+        <div class="loading-steps">
+          <div id="loadingStepOne" class="loading-step">Searching the impact database for the selected product.</div>
+          <div id="loadingStepTwo" class="loading-step">Matching report details and extracting sustainability metrics.</div>
+        </div>
+        <div class="loading-bar"><span></span></div>
+      </div>
+    </div>
 
-      <aside class="panel">
-        <h2>Generate Product Report</h2>
-        <p class="panel-copy">Enter a product ID to fetch sustainability metrics and build a richer, more dynamic impact summary.</p>
-
-        <div class="form-grid">
-          <div>
-            <label for="productId">Product ID</label>
-            <input id="productId" name="productId" placeholder="Try 1, 2, or 3" inputmode="numeric" />
-          </div>
-
-          <div>
-            <label>Quick Fill</label>
-            <div class="chip-row">
-              <button class="chip" type="button" data-product-id="1">Product 1</button>
-              <button class="chip" type="button" data-product-id="2">Product 2</button>
-              <button class="chip" type="button" data-product-id="3">Product 3</button>
+    <section id="homeView" class="view">
+      <div class="hero">
+        <article class="hero-card">
+          <div class="eyebrow">Impact Report Console</div>
+          <h1>Generate product impact reports.</h1>
+          <p class="hero-copy">
+            Enter a product ID and open a focused report page with plastic savings, carbon impact, sourcing notes, and confidence scoring.
+          </p>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="scan-line"></div>
+            <div class="visual-row">
+              <span>Plastic</span>
+              <strong>520g</strong>
+            </div>
+            <div class="visual-row">
+              <span>Carbon</span>
+              <strong>388g</strong>
+            </div>
+            <div class="visual-row">
+              <span>Confidence</span>
+              <strong>90%</strong>
             </div>
           </div>
-
-          <div class="actions">
-            <button class="primary-btn" id="generateBtn" type="button">Generate Impact Report</button>
-            <div id="statusMessage" class="status" aria-live="polite">Waiting for a product selection.</div>
+          <div class="stats-strip">
+            <div class="mini-stat">
+              <strong>01</strong>
+              <span>Choose a product ID and start a new report</span>
+            </div>
+            <div class="mini-stat">
+              <strong>02</strong>
+              <span>Completed reports open on their own page</span>
+            </div>
+            <div class="mini-stat">
+              <strong>03</strong>
+              <span>Seen product reports stay available in this browser</span>
+            </div>
           </div>
+        </article>
+
+        <aside class="panel">
+          <h2>New Report</h2>
+          <p class="panel-copy">Product IDs are converted into sustainability metrics, confidence scoring, and sourcing context. Sample IDs: 1, 2, 3, 16, 80, 150.</p>
+
+          <div class="form-grid">
+            <div>
+              <label for="productId">Product ID</label>
+              <input id="productId" name="productId" placeholder="Try any sample ID from 1 to 150" inputmode="numeric" />
+            </div>
+
+            <div>
+              <div class="field-label">Quick Fill</div>
+              <div class="chip-row">
+                <button class="chip" type="button" data-product-id="1">Product 1</button>
+                <button class="chip" type="button" data-product-id="2">Product 2</button>
+                <button class="chip" type="button" data-product-id="3">Product 3</button>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="primary-btn" id="generateBtn" type="button">Generate Impact Report</button>
+              <div id="statusMessage" class="status" aria-live="polite">Waiting for a product selection.</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <aside class="history-card home-history">
+        <h2>Report History</h2>
+        <p class="history-copy">Previously opened product reports stay available for quick review.</p>
+        <div class="history-list" data-history-list>
+          <p class="empty-history">No recent reports yet. Generate one to populate this panel.</p>
         </div>
       </aside>
     </section>
 
-    <section class="content-grid">
-      <div class="results-area">
-        <div id="loadingModal" class="loading-modal" aria-hidden="true">
-          <div id="loadingCard" class="loading-card" role="dialog" aria-modal="true" aria-labelledby="loadingHeading">
-            <h2 id="loadingHeading">Analyzing sustainability impact</h2>
-            <p class="results-subtitle">We are pulling the report, calculating confidence, and preparing the dashboard view.</p>
-            <div class="loading-context">
-              <div id="loadingProductPill" class="loading-pill">Waiting for product input</div>
-              <p id="loadingMessage" class="loading-copy">The selected product details will appear here while the search is in progress.</p>
-            </div>
-            <div class="loading-details">
-              <div class="loading-detail">
-                <span>Product ID</span>
-                <strong id="loadingProductIdValue">Not selected</strong>
-              </div>
-              <div class="loading-detail">
-                <span>Product Name</span>
-                <strong id="loadingProductNameValue">Waiting for report lookup</strong>
-              </div>
-            </div>
-            <div class="loading-steps">
-              <div id="loadingStepOne" class="loading-step">Searching the impact database for the selected product.</div>
-              <div id="loadingStepTwo" class="loading-step">Matching report details and extracting sustainability metrics.</div>
-            </div>
-            <div class="loading-bar"><span></span></div>
-          </div>
+    <section id="reportView" class="view report-view" hidden>
+      <div class="report-topbar">
+        <div>
+          <h2>Generated Impact File</h2>
+          <p>Completed sustainability metrics, confidence, sourcing, and recommendations.</p>
         </div>
-
-        <div class="results-header hero-card">
-          <h2>Impact Overview</h2>
-          <p class="results-subtitle">Each run creates a dynamic summary from the latest API response.</p>
-          <div id="resultsMeta" class="meta-strip">
-            <span class="meta-pill">No report loaded yet</span>
-          </div>
-        </div>
-
-        <div id="resultsMount">
-          <div class="placeholder">
-            Enter a product ID to load plastic savings, carbon reduction, sourcing context, and a confidence-backed narrative.
-          </div>
-        </div>
+        <button class="secondary-btn" id="backHomeBtn" type="button">Back to Home</button>
       </div>
 
-      <aside class="history-card">
-        <h2>Recent Reports</h2>
-        <p class="history-copy">Your latest lookups stay here so the dashboard feels more dynamic during demos and testing.</p>
-        <div id="historyList" class="history-list">
-          <p class="empty-history">No recent reports yet. Generate one to populate this panel.</p>
+      <section class="content-grid">
+        <div class="results-area">
+          <div class="results-header hero-card">
+            <h2>Impact Overview</h2>
+            <p class="results-subtitle">This page shows the completed report from the latest API response.</p>
+            <div id="resultsMeta" class="meta-strip">
+              <span class="meta-pill">No report loaded yet</span>
+            </div>
+          </div>
+
+          <div id="resultsMount">
+            <div class="placeholder">
+              Generate a report from the home page to view the completed report here.
+            </div>
+          </div>
         </div>
-      </aside>
+
+        <aside class="history-card">
+          <h2>Report History</h2>
+          <p class="history-copy">Previously opened product reports stay available for quick review.</p>
+          <div class="history-list" data-history-list>
+            <p class="empty-history">No recent reports yet. Generate one to populate this panel.</p>
+          </div>
+        </aside>
+      </section>
     </section>
   </main>
 
@@ -846,9 +1736,12 @@
     const loadingProductNameValue = document.getElementById("loadingProductNameValue");
     const loadingStepOne = document.getElementById("loadingStepOne");
     const loadingStepTwo = document.getElementById("loadingStepTwo");
+    const homeView = document.getElementById("homeView");
+    const reportView = document.getElementById("reportView");
+    const backHomeBtn = document.getElementById("backHomeBtn");
     const resultsMeta = document.getElementById("resultsMeta");
     const resultsMount = document.getElementById("resultsMount");
-    const historyList = document.getElementById("historyList");
+    const historyLists = document.querySelectorAll("[data-history-list]");
     const HISTORY_KEY = "ai-impact-history";
 
     function setStatus(message, tone) {
@@ -858,6 +1751,15 @@
 
     function formatNumber(value) {
       return new Intl.NumberFormat("en-US").format(Number(value) || 0);
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
 
     function animateNumber(element, end, duration = 900) {
@@ -894,6 +1796,25 @@
       }
 
       writeNext();
+    }
+
+    function wait(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    function showHomeView() {
+      document.body.classList.remove("report-ready");
+      homeView.hidden = false;
+      reportView.hidden = true;
+      productInput.value = "";
+      setStatus("Waiting for a product selection.", "");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showReportView() {
+      homeView.hidden = true;
+      reportView.hidden = false;
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function getConfidenceTone(score) {
@@ -954,6 +1875,7 @@
           : new Date();
       const responseTime = meta && meta.processing_time_ms ? meta.processing_time_ms : durationMs;
       const items = [
+        "Report ready",
         product && product.name ? product.name : `Product #${productId}`,
         `ID #${productId}`,
         `${responseTime}ms response`,
@@ -961,7 +1883,7 @@
       ];
 
       resultsMeta.innerHTML = items
-        .map((item) => `<span class="meta-pill">${item}</span>`)
+        .map((item) => `<span class="meta-pill">${escapeHTML(item)}</span>`)
         .join("");
     }
 
@@ -977,19 +1899,25 @@
       const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
 
       if (!history.length) {
-        historyList.innerHTML = '<p class="empty-history">No recent reports yet. Generate one to populate this panel.</p>';
+        historyLists.forEach((historyList) => {
+          historyList.innerHTML = '<p class="empty-history">No recent reports yet. Generate one to populate this panel.</p>';
+        });
         return;
       }
 
-      historyList.innerHTML = history
+      const historyMarkup = history
         .map((item) => `
-          <button class="history-item" type="button" data-history-id="${item.productId}">
-            <strong>Product #${item.productId}</strong>
-            <span>${item.summary}</span>
-            <span>${item.timestamp}</span>
+          <button class="history-item" type="button" data-history-id="${escapeHTML(item.productId)}" aria-label="Open report for ${escapeHTML(item.productName || `Product ${item.productId}`)}">
+            <strong>${escapeHTML(item.productName || `Product #${item.productId}`)}</strong>
+            <span>${escapeHTML(item.summary)}</span>
+            <span>${escapeHTML(item.timestamp)}</span>
           </button>
         `)
         .join("");
+
+      historyLists.forEach((historyList) => {
+        historyList.innerHTML = historyMarkup;
+      });
     }
 
     function showLoading(isLoading) {
@@ -1033,14 +1961,36 @@
       const priorityLabel = getPriorityLabel(impact.confidence_score || 0);
       const recommendations = getRecommendations(impact);
       const productName = product && product.name ? product.name : `Product #${productId}`;
-      const executiveSummary = `${productName} shows ${formatNumber(impact.plastic_saved_grams || 0)} grams of plastic savings and ${formatNumber(impact.carbon_avoided_grams || 0)} grams of carbon avoidance, giving it a ${impact.confidence_label.toLowerCase()} confidence sustainability profile.`;
+      const confidenceLabel = impact.confidence_label || "Low";
+      const executiveSummary = `${productName} shows ${formatNumber(impact.plastic_saved_grams || 0)} grams of plastic savings and ${formatNumber(impact.carbon_avoided_grams || 0)} grams of carbon avoidance, giving it a ${confidenceLabel.toLowerCase()} confidence sustainability profile.`;
+      const generatedAt = meta && meta.generated_at ? new Date(meta.generated_at) : new Date();
+      const sourceLabel = meta && meta.source === "database" ? "Database report" : "Generated report";
+      const safeProductId = escapeHTML(productId);
+      const safeProductName = escapeHTML(productName);
+      const safePriorityLabel = escapeHTML(priorityLabel);
+      const safeExecutiveSummary = escapeHTML(executiveSummary);
+      const safeConfidenceTone = escapeHTML(confidenceTone.toLowerCase());
+      const safeConfidenceLabel = escapeHTML(confidenceLabel);
+      const safeSourcingSummary = escapeHTML(impact.local_sourcing_summary || "Standard sourcing profile.");
+      const safeGeneratedAt = escapeHTML(generatedAt.toLocaleTimeString());
+      const safeSourceLabel = escapeHTML(sourceLabel);
 
+      document.body.classList.add("report-ready");
+      showReportView();
       resultsMount.innerHTML = `
         <div class="report-layout">
+          <div class="report-status-banner">
+            <div>
+              <strong>Report generated successfully</strong>
+              <span>${safeSourceLabel} for ${safeProductName} finished at ${safeGeneratedAt}. The dashboard below is the new result.</span>
+            </div>
+            <div class="report-stamp">READY</div>
+          </div>
+
           <article class="report-hero">
             <span class="report-kicker">Impact Report</span>
-            <h3 class="report-title">${priorityLabel}</h3>
-            <p class="report-summary">${executiveSummary}</p>
+            <h3 class="report-title">${safePriorityLabel}</h3>
+            <p class="report-summary">${safeExecutiveSummary}</p>
           </article>
 
           <section class="highlights-grid">
@@ -1059,7 +2009,7 @@
             <article class="highlight-card">
               <span class="highlight-label">Confidence Level</span>
               <p class="highlight-value">${impact.confidence_score}%</p>
-              <p class="highlight-note">${impact.confidence_label} confidence with a ${confidenceTone.toLowerCase()} assessment.</p>
+              <p class="highlight-note">${safeConfidenceLabel} confidence with a ${safeConfidenceTone} assessment.</p>
             </article>
           </section>
 
@@ -1073,11 +2023,11 @@
                 </div>
                 <div class="insight-row">
                   <strong>Sourcing Insight</strong>
-                  <span>${impact.local_sourcing_summary || "Standard sourcing profile."}</span>
+                  <span>${safeSourcingSummary}</span>
                 </div>
                 <div class="insight-row">
                   <strong>Why It Matters</strong>
-                  <span>This product is currently positioned as a ${priorityLabel.toLowerCase()} based on the available sustainability signals.</span>
+                  <span>This product is currently positioned as a ${escapeHTML(priorityLabel.toLowerCase())} based on the available sustainability signals.</span>
                 </div>
               </div>
             </article>
@@ -1087,11 +2037,11 @@
               <div class="report-table">
                 <div class="table-row">
                   <span>Product Name</span>
-                  <strong>${productName}</strong>
+                  <strong>${safeProductName}</strong>
                 </div>
                 <div class="table-row">
                   <span>Product ID</span>
-                  <strong>#${productId}</strong>
+                  <strong>#${safeProductId}</strong>
                 </div>
                 <div class="table-row">
                   <span>Plastic Savings</span>
@@ -1107,7 +2057,7 @@
                 </div>
                 <div class="table-row">
                   <span>Sourcing</span>
-                  <strong>${impact.local_sourcing_summary || "Standard"}</strong>
+                  <strong>${escapeHTML(impact.local_sourcing_summary || "Standard")}</strong>
                 </div>
               </div>
             </article>
@@ -1116,7 +2066,7 @@
           <article class="report-section">
             <h3 class="section-heading">Recommended Next Steps</h3>
             <div class="recommendation-list">
-              ${recommendations.map((item) => `<div class="recommendation-item">${item}</div>`).join("")}
+              ${recommendations.map((item) => `<div class="recommendation-item">${escapeHTML(item)}</div>`).join("")}
             </div>
           </article>
         </div>
@@ -1149,6 +2099,7 @@
         return;
       }
 
+      document.body.classList.remove("report-ready");
       productInput.value = productId;
       setStatus("Fetching impact data and preparing the dashboard...", "");
       updateLoadingState(productId, "loading");
@@ -1173,23 +2124,20 @@
         }
 
         const durationMs = Math.round(performance.now() - startedAt);
+        await wait(Math.max(0, 850 - durationMs));
         const productLabel = data.product && data.product.name ? data.product.name : product && product.name ? product.name : `Product #${productId}`;
         updateLoadingState(productId, "success", data.product);
         renderReport(productId, data.impact, durationMs, data.meta, data.product);
         saveHistory({
           productId,
-          summary: `${formatNumber(data.impact.plastic_saved_grams)}g plastic saved · ${formatNumber(data.impact.carbon_avoided_grams)}g carbon avoided`,
+          productName: productLabel,
+          summary: `${formatNumber(data.impact.plastic_saved_grams)}g plastic saved | ${formatNumber(data.impact.carbon_avoided_grams)}g carbon avoided`,
           timestamp: new Date().toLocaleString()
         });
         setStatus(`Report for ${productLabel} is ready.`, "success");
         setTimeout(() => showLoading(false), 900);
       } catch (error) {
-        resultsMount.innerHTML = `
-          <div class="placeholder">
-            ${error.message}
-          </div>
-        `;
-        resultsMeta.innerHTML = '<span class="meta-pill">Request failed</span>';
+        document.body.classList.remove("report-ready");
         updateLoadingState(productId, "error");
         setStatus(error.message, "error");
         setTimeout(() => showLoading(false), 900);
@@ -1200,14 +2148,18 @@
       chip.addEventListener("click", () => generateImpact(chip.dataset.productId));
     });
 
-    historyList.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-history-id]");
-      if (!button) {
-        return;
-      }
+    historyLists.forEach((historyList) => {
+      historyList.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-history-id]");
+        if (!button) {
+          return;
+        }
 
-      generateImpact(button.dataset.historyId);
+        generateImpact(button.dataset.historyId);
+      });
     });
+
+    backHomeBtn.addEventListener("click", showHomeView);
 
     generateBtn.addEventListener("click", () => generateImpact());
 
